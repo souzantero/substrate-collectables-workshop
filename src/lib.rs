@@ -13,6 +13,13 @@ pub mod pallet {
 	#[pallet::pallet]
 	pub struct Pallet<T>(core::marker::PhantomData<T>);
 
+	#[derive(Encode, Decode, MaxEncodedLen, TypeInfo)]
+	#[scale_info(skip_type_params(T))]
+	pub struct Kitty<T: Config> {
+		pub dna: [u8; 32],
+		pub owner: T::AccountId,
+	}
+
 	#[pallet::config]
 	pub trait Config: frame_system::Config {
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
@@ -27,7 +34,7 @@ pub mod pallet {
 	#[pallet::storage]
 	pub(super) type Kitties<T: Config> = StorageMap<
 		Key = [u8; 32],
-		Value = ()
+		Value = Kitty<T>,
 	>;
 
 	#[pallet::event]
