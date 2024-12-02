@@ -40,7 +40,7 @@ pub mod pallet {
 	#[pallet::storage]
 	pub(super) type KittiesOwned<T: Config> = StorageMap<
 		Key = T::AccountId,
-		Value = Vec<[u8; 32]>,
+		Value = BoundedVec<[u8; 32], ConstU32<100>>,
 		QueryKind = ValueQuery,
 	>;
 
@@ -54,6 +54,7 @@ pub mod pallet {
 	pub enum Error<T> {
 		TooManyKitties,
 		DuplicateKitty,
+		TooManyOwned,
 	}
 
 	#[pallet::call]
