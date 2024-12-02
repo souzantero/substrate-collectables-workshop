@@ -4,6 +4,8 @@ mod impls;
 mod tests;
 
 use frame::prelude::*;
+use frame::traits::fungible::Inspect;
+use frame::traits::fungible::Mutate;
 pub use pallet::*;
 
 #[frame::pallet(dev_mode)]
@@ -23,19 +25,14 @@ pub mod pallet {
 	#[pallet::config]
 	pub trait Config: frame_system::Config {
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
+		type NativeBalance: Inspect<Self::AccountId> + Mutate<Self::AccountId>;
 	}
 
 	#[pallet::storage]
-	pub(super) type CountForKitties<T: Config> = StorageValue<
-		Value = u32,
-		QueryKind = ValueQuery
-	>;
+	pub(super) type CountForKitties<T: Config> = StorageValue<Value = u32, QueryKind = ValueQuery>;
 
 	#[pallet::storage]
-	pub(super) type Kitties<T: Config> = StorageMap<
-		Key = [u8; 32],
-		Value = Kitty<T>,
-	>;
+	pub(super) type Kitties<T: Config> = StorageMap<Key = [u8; 32], Value = Kitty<T>>;
 
 	#[pallet::storage]
 	pub(super) type KittiesOwned<T: Config> = StorageMap<
