@@ -4,6 +4,11 @@ use frame::primitives::BlakeTwo256;
 use frame::traits::Hash;
 
 impl<T: Config> Pallet<T> {
+	pub fn do_set_price(caller: T::AccountId, kitty_id: [u8; 32], new_price: Option<BalanceOf<T>>) -> DispatchResult {
+		Self::deposit_event(Event::<T>::PriceSet { owner: caller, kitty_id, new_price });
+		Ok(())
+	}
+
 	pub fn do_transfer(from: T::AccountId, to: T::AccountId, kitty_id: [u8; 32]) -> DispatchResult {
 		ensure!(from != to, Error::<T>::TransferToSelf);
 		let mut kitty = Kitties::<T>::get(kitty_id).ok_or(Error::<T>::NoKitty)?;
